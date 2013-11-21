@@ -105,6 +105,21 @@ describe "Authentication" do
         before { visit users_path }
         it { should have_selector('title', text: 'Sign in') }
       end
+
+      describe "as signed in user" do
+        let(:user) { FactoryGirl.create(:user) }
+        before { sign_in user }
+
+        describe "accessing signup page" do
+          before { get signup_path }
+          specify { response.should redirect_to(root_path) }
+        end
+
+        describe "creating a new user" do
+          before { post users_path }
+          specify { response.should redirect_to(root_path) }
+        end
+      end
     end
 
     describe "as non-admin user" do
