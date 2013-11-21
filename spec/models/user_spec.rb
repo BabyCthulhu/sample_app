@@ -11,6 +11,7 @@
 #
 
 require 'spec_helper'
+include Spec::Matchers
 
 describe User do
 
@@ -32,6 +33,7 @@ describe User do
 
   it { should be_valid }
   it { should_not be_admin }
+  specify { expect { User.new(admin: true) }.to raise_error(ActiveModel::MassAssignmentSecurity::Error) }
 
   describe "when name is not present" do
     before { @user.name = " " }
