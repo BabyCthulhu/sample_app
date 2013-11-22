@@ -3,9 +3,9 @@
 
 <div class="row">
   <div class="span6 offset3">
-    <%= form_tag sessions_path do |f| %>
+    <%= form_for(:session, url: sessions_path) do |f| %>
 
-      <%= render 'shared/error_messages' %>
+      <%= render 'shared/error_messages', object: f.object %>
 
       <%= label_tag :email %>
       <%= text_field_tag :email %>
