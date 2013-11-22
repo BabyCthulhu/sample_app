@@ -28,11 +28,27 @@ describe "Static pages" do
           visit root_path
         end
 
+        describe "with 2 posts" do
+         it "should show the right number of microposts in plural" do
+           page.should have_content("2 microposts")
+         end
+        end
+
+        describe "with 1 post" do
+          before do
+            user.microposts.first.destroy 
+            visit root_path
+          end
+
+          it { should have_content("1 micropost") }
+        end
+
         it "should render the user's feed" do
           user.feed.each do |item|
             page.should have_selector("li##{item.id}", text: item.content)
           end
         end
+
       end
     end
 
