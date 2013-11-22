@@ -43,12 +43,21 @@ describe "Static pages" do
           it { should have_content("1 micropost") }
         end
 
+        describe "with more than 30 posts" do
+          before do
+            30.times { |n| FactoryGirl.create(:micropost, user: user, content: "Entry #{n}") }
+            visit root_path
+          end
+
+          it { should have_selector('div.pagination') }
+        end
+
+
         it "should render the user's feed" do
           user.feed.each do |item|
             page.should have_selector("li##{item.id}", text: item.content)
           end
         end
-
       end
     end
 
