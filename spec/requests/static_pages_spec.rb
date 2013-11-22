@@ -58,7 +58,16 @@ describe "Static pages" do
             page.should have_selector("li##{item.id}", text: item.content)
           end
         end
-      end
+
+        it "should not have delete links for other user's feeds" do
+          user.feed.each do |item|
+            if user != item.user
+              page.should_not have_link('delete', href: micropost_path(item))
+            else
+              page.should have_link('delete', href: micropost_path(item))
+            end
+          end
+        end end
     end
 
     describe "Help page" do
