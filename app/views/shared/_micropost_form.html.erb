@@ -1,13 +1,13 @@
 <%= form_for(@micropost) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
   <div class="field">
-    <%= f.text_area :content, placeholder: "Compose new micropost...", id: "form_for_micropost" %>
+    <%= f.text_area :content, placeholder: "Compose new micropost...", id: "micropost_content" %>
   </div>
   <span id="remaining_characters"></span>
   <%= f.submit "Post", class: "btn btn-large btn-primary" %>
   <script>
 var maxchar = 140;
-var i = document.getElementById("form_for_micropost");
+var i = document.getElementById("micropost_content");
 var c = document.getElementById("remaining_characters");
 
 i.addEventListener("keyup",count);
