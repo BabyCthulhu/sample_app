@@ -147,7 +147,12 @@ describe User do
 
   describe "micropost associations" do
 
-    before { @user.save }
+    before do 
+      @user.save
+      @user.follow!(FactoryGirl.create(:user))
+      FactoryGirl.create(:user).follow!(@user)
+    end
+
     let!(:older_micropost) do
       FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
     end
@@ -160,15 +165,27 @@ describe User do
       @user.microposts.should == [newer_micropost, older_micropost]
     end 
 
-    it "should destroy associated microposts" do
-      microposts = @user.microposts
-      @user.destroy
-      microposts.each do |micropost|
-        Micropost.find_by_id(micropost.id).should be_nil
+    describe "on user destruction" do
+      let(:microposts) { @user.microposts }
+      let(:relationships) { @user.relationships }
+     
+      before { @user.destroy } 
+
+      it "should destroy associated microposts" do
+        microposts.each do |micropost|
+          Micropost.find_by_id(micropost.id).should be_nil
+        end
+      end
+
+      it "should destroy associated relationships" do
+        relationships.each do |relationship|
+          Relationship.find_by_follower_id(relationship.follower_id).should be_nil
+          Relationship.find_by_following_id(relationship.following_id).should be_nil
+        end
       end
     end
 
-    describe "status" do
+   describe "status" do
       let(:unfollowed_post) do
         FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
       end
